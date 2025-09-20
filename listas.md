@@ -69,3 +69,23 @@ R={
 
 Indicar porque la relacion no se cumple
 Agregar las demas propiedades
+
+Conjunto A = {1,2,3,4}
+R = { (1,1),(1,3),(2,2),(3,3),(4,3),(4,4) }
+                                        |   
+Antisimetrica R = {(1,3),(3,2),(3,4)}   |   Asimetrica R = {(1,3),(3,2),(3,4)}  |
+(1 R 3) Y (3 R 1) -> 1 = 3              |   (1 R 3) -> !(3 R 1)                 |
+ SI     Y NO    ->  NO                  |       SI  -> !(NO)                    |
+        NO      ->  NO                  |       SI  ->  SI                      |
+            V   verdad                  |           SI Verdadero                |
+                                        |                                       |
+(3 R 2) Y (2 R 3) -> 3 = 2              |   (3 R 2) -> !(2 R 3)                 |
+ SI     Y NO    ->  NO                  |       SI  -> !(NO)                    |
+        NO      ->  NO                  |       SI  ->  SI                      |
+            V   verdad                  |           SI Verdadero                |
+                                        |                                       |
+                                        |                                       |
+(3 R 4) Y (4 R 3) -> 3 = 4              |   (3 R 4) -> !(4 R 3)                 |
+ SI     Y NO    ->  NO                  |       SI  -> !(NO)                    |
+        NO      ->  NO                  |       SI  ->  SI                      |
+            V   verdad                  |           SI Verdadero                |

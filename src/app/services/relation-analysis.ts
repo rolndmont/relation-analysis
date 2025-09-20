@@ -30,6 +30,7 @@ export class RelationAnalysis {
     const reflexive = this.isReflexive(setA, relation);
     const antireflexive = this.isAntiReflexive(setA, relation);
     const symmetric = this.isSymmetric(relation);
+    const asymemmetric = this.isAsymmetric(reflexive,relation);
     const antisymmetric = this.isAntisymmetric(relation);
     const transitive = this.isTransitive(relation);
     
@@ -40,6 +41,7 @@ export class RelationAnalysis {
       reflexive,
       antireflexive,
       symmetric,
+      asymemmetric,
       antisymmetric,
       transitive,
       equivalenceRelation,
@@ -69,6 +71,19 @@ export class RelationAnalysis {
       if (!found) return false;
     }
     return true;
+  }
+
+  private isAsymmetric(reflexive: boolean,relation: Pair[]): boolean {
+    if(reflexive) return false;
+    for (const pair of relation) {
+      const found = relation.some(p => p.x === pair.y && p.y === pair.x);
+      if(!found) return true;
+      /* if(!found){
+        const foundReflexive = relation.some(p => p.x === pair.x && p.y === pair.x);
+        if(!foundReflexive) return true;
+      } */
+    }
+    return false;
   }
 
   private isAntisymmetric(relation: Pair[]): boolean {

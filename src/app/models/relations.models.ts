@@ -7,6 +7,7 @@ export interface RelationProperties {
   reflexive: boolean;
   antireflexive: boolean;
   symmetric: boolean;
+  asymemmetric: boolean;
   antisymmetric: boolean;
   transitive: boolean;
   equivalenceRelation: boolean;
