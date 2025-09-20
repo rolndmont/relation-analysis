@@ -1,0 +1,75 @@
+.graph-container {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.graph-info {
+  margin-top: 1rem;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.reflexive-count {
+  color: #ff5722;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.no-graph-data {
+  text-align: center;
+  padding: 2rem;
+  color: #9e9e9e;
+  font-style: italic;
+}
+
+/* Estilos para los nodos */
+.node circle {
+  stroke: #fff;
+  fill: #ff5722 !important;
+  stroke-width: 2px;
+}
+
+.node text {
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+  pointer-events: none;
+}
+
+/* Estilos para enlaces no reflexivos */
+.non-reflexive-link {
+  stroke: #333;
+  stroke-width: 2;
+  stroke-opacity: 0.8;
+}
+
+/* Estilos para enlaces reflexivos (bucles) */
+.reflexive-link {
+  stroke: #ff5722;
+  stroke-width: 3;
+  stroke-opacity: 0.9;
+  fill: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .graph-container {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .graph-container {
+    height: 300px;
+  }
+  
+  /* Ajustar tamaño de bucles para pantallas pequeñas */
+  .reflexive-link {
+    r: 25;
+    stroke-width: 2.5;
+  }
+}

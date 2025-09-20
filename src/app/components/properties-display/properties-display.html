@@ -1,0 +1,12 @@
+<div class="properties">
+  <h2>Propiedades de la Relación</h2>
+  
+  @for (key of propertyOrder; track key) {
+    <div class="property">
+      <div class="property-name">{{ formatPropertyName(key) }}:</div>
+      <div class="property-value" [class.true]="properties()[key]" [class.false]="!properties()[key]">
+        {{ properties()[key] ? 'Sí' : 'No' }}
+      </div>
+    </div>
+  }
+</div>

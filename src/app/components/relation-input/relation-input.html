@@ -1,0 +1,20 @@
+<div class="input-section">
+  <h2>Ingresar Datos de la Relación</h2>
+  
+  <div class="form-group">
+    <label for="setA">Conjunto A (a, b, c):</label>
+    <input type="text" id="setA" [(ngModel)]="setA">
+  </div>
+  
+  <div class="form-group">
+    <label for="setB">Conjunto B (a, b, c):</label>
+    <input type="text" id="setB" [(ngModel)]="setB">
+  </div>
+  
+  <div class="form-group">
+    <label for="relation">Relación R (ejemplo: (1,1),(1,2)):</label>
+    <input type="text" id="relation" [(ngModel)]="relation">
+  </div>
+  
+  <button (click)="onAnalyze()">Analizar</button>
+</div>

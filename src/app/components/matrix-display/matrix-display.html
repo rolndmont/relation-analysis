@@ -1,0 +1,38 @@
+<div class="visualization">
+  <h3>Matriz de la Relación</h3>
+  
+  @if (hasData()) {
+    <div class="matrix-container">
+      <table class="relation-matrix">
+        <!-- Encabezado de columnas (elementos de B) -->
+        <tr>
+          <th class="corner-cell">R</th>
+          @for (element of setB(); track $index) {
+            <th class="header-cell">{{ element }}</th>
+          }
+        </tr>
+        
+        <!-- Filas de la matriz -->
+        @for (elementA of setA(); track $index; let rowIndex = $index) {
+          <tr>
+            <th class="header-cell">{{ elementA }}</th>
+            @for (elementB of setB(); track $index; let colIndex = $index) {
+              <td 
+                class="matrix-cell" 
+                [class.has-relation]="getCellValue(rowIndex, colIndex) === 1"
+                [title]="getCellValue(rowIndex, colIndex) === 1 ? 
+                         'Existe relación entre ' + elementA + ' y ' + elementB : 
+                         'No existe relación entre ' + elementA + ' y ' + elementB">
+                {{ getCellValue(rowIndex, colIndex) }}
+              </td>
+            }
+          </tr>
+        }
+      </table>
+    </div>
+  } @else {
+    <div class="no-data">
+      <p>No hay datos para mostrar la matriz.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,13 @@
+
+  <h3>Grafo de la Relación</h3>
+  
+  @if (relation().length > 0 && setA().length > 0 && setB().length > 0) {
+    <div id="graph-container" class="graph-container">
+      <!-- D3.js renderizará el grafo aquí -->
+    </div>
+    
+  } @else {
+    <div class="no-graph-data">
+      <p>No hay datos para mostrar el grafo de la relación.</p>
+    </div>
+  }

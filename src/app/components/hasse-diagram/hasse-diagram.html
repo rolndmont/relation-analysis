@@ -1,0 +1,10 @@
+<h3>Diagrama de Hasse</h3>
+@if (relation().length > 0 && setA().length > 0) {
+<div id="hasse-container" class="hasse-container"></div>
+
+} @else {
+<div class="no-hasse-data">
+  <p>No hay datos para mostrar el diagrama de Hasse.</p>
+  <p>Asegúrate de que la relación sea de orden (reflexiva, antisimétrica y transitiva).</p>
+</div>
+}
