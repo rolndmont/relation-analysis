@@ -74,11 +74,11 @@ export class RelationAnalysis {
   }
 
   private isAsymmetric(reflexive: boolean,relation: Pair[]): boolean {
-    if(reflexive) return false;
+    if(reflexive) return false; // Una relacion reflexiva no puede ser asimetrica
     for (const pair of relation) {
       const found = relation.some(p => p.x === pair.y && p.y === pair.x);
       if(!found) return true;
-      /* if(!found){
+      /* if(!found){ // Si se descomenta este codigo, entonces eliminar el parametro reflexive de la funcion
         const foundReflexive = relation.some(p => p.x === pair.x && p.y === pair.x);
         if(!foundReflexive) return true;
       } */
