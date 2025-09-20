@@ -5,6 +5,7 @@ export interface Pair {
 
 export interface RelationProperties {
   reflexive: boolean;
+  antireflexive: boolean;
   symmetric: boolean;
   antisymmetric: boolean;
   transitive: boolean;

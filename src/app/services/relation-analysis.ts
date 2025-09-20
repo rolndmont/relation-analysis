@@ -28,6 +28,7 @@ export class RelationAnalysis {
 
   calculateProperties(setA: string[], setB: string[], relation: Pair[]): RelationProperties {
     const reflexive = this.isReflexive(setA, relation);
+    const antireflexive = this.isAntiReflexive(setA, relation);
     const symmetric = this.isSymmetric(relation);
     const antisymmetric = this.isAntisymmetric(relation);
     const transitive = this.isTransitive(relation);
@@ -37,6 +38,7 @@ export class RelationAnalysis {
     
     return {
       reflexive,
+      antireflexive,
       symmetric,
       antisymmetric,
       transitive,
@@ -49,6 +51,14 @@ export class RelationAnalysis {
     for (const element of set) {
       const found = relation.some(pair => pair.x === element && pair.y === element);
       if (!found) return false;
+    }
+    return true;
+  }
+
+  private isAntiReflexive(set: string[], relation: Pair[]): boolean {
+    for (const element of set) {
+      const found = relation.some(pair => pair.x === element && pair.y === element);
+      if (found) return false;
     }
     return true;
   }

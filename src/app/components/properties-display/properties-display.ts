@@ -16,6 +16,7 @@ export class PropertiesDisplay {
 
   readonly propertyOrder: PropertyKey[] = [
     'reflexive',
+    'antireflexive',
     'symmetric',
     'antisymmetric',
     'transitive',
@@ -26,6 +27,7 @@ export class PropertiesDisplay {
   formatPropertyName(key: PropertyKey): string {
     const names: Record<PropertyKey, string> = {
       reflexive: 'Reflexiva',
+      antireflexive: 'Antirreflexiva',
       symmetric: 'Simétrica',
       antisymmetric: 'Antisimétrica',
       transitive: 'Transitiva',
