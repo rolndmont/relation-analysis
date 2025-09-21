@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RelationInput } from './components/relation-input/relation-input';
 import { PropertiesDisplay } from './components/properties-display/properties-display';
 import { MatrixDisplay } from './components/matrix-display/matrix-display';
-import { RelationData, Pair } from './models/relations.models';
+import { RelationData, Pair, HasseData } from './models/relations.models';
 import { RelationAnalysis } from './services/relation-analysis';
 import { GraphDisplay } from "./components/graph-display/graph-display";
 import { HasseDiagram } from "./components/hasse-diagram/hasse-diagram";
@@ -26,7 +26,7 @@ export class App {
   properties = signal<any>(null);
   matrix = signal<number[][]>([]);
   equivalenceClasses = signal<string[][]>([]);
-  hasseData = signal<any>(null);
+  hasseData = signal<HasseData>({ setA: [], hasseRelations: [], levels: {} });
 
   constructor(private relationAnalysis: RelationAnalysis) {}
   onAnalyze(data: RelationData) {
@@ -58,7 +58,7 @@ export class App {
       const hasse = this.relationAnalysis.generateHasseDiagram(this.setA(), this.relation());
       this.hasseData.set(hasse);
     } else {
-      this.hasseData.set(null);
+      this.hasseData.set({ setA: [], hasseRelations: [], levels: {} });
     }
   }
 }

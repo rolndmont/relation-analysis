@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Pair, RelationProperties, RelationData } from '../models/relations.models';
+import { Pair, RelationProperties, RelationData, HasseData } from '../models/relations.models';
 
 @Injectable({
   providedIn: 'root'
@@ -147,15 +147,102 @@ export class RelationAnalysis {
     return classes;
   }
 
-  // Para el diagrama de Hasse (simplificado)
-  generateHasseDiagram(setA: string[], relation: Pair[]): any {
-    // Esta es una implementación simplificada
-    // En una aplicación real, necesitarías una librería de gráficos
-    const nodes = setA.map(item => ({ id: item, label: item }));
-    const edges = relation
-      .filter(pair => pair.x !== pair.y) // Eliminar bucles
-      .map(pair => ({ from: pair.x, to: pair.y }));
-    
-    return { nodes, edges };
+  // Para el diagrama de Hasse
+  generateHasseDiagram(setA: string[], relation: Pair[]): HasseData {
+    // Generar relaciones de Hasse
+    const hasseRelations = this.calculateHasseRelations(setA,relation);
+    // Calcular niveles jerárquicos
+    const levels = this.calculateHierarchyLevels(setA,relation);
+    const dataHasse: HasseData = { setA, hasseRelations, levels };
+    return dataHasse;
   }
+
+  public calculateHasseRelations(setA: string[],relation: Pair[]): Pair[] {
+    // 1. Eliminar relaciones reflexivas (a,a)
+    const irreflexive = relation.filter(pair => pair.x !== pair.y);
+    
+    // 2. Eliminar relaciones transitivas
+    const hasseRelations: Pair[] = [];
+    
+    for (const pair of irreflexive) {
+      let isTransitive = false;
+      
+      // Verificar si existe un camino más largo entre pair.x y pair.y
+      for (const intermediate of setA) {
+        if (intermediate !== pair.x && intermediate !== pair.y) {
+          const hasFirstStep = relation.some(p => p.x === pair.x && p.y === intermediate);
+          const hasSecondStep = relation.some(p => p.x === intermediate && p.y === pair.y);
+          
+          if (hasFirstStep && hasSecondStep) {
+            isTransitive = true;
+            break;
+          }
+        }
+      }
+      
+      if (!isTransitive) {
+        hasseRelations.push(pair);
+      }
+    }
+    
+    return hasseRelations;
+  }
+
+  private calculateHierarchyLevels(setA: string[], relation: Pair[]): { [level: number]: string[] } {
+    const levels: { [level: number]: string[] } = {};
+    const inDegree: { [node: string]: number } = {};
+    
+    // Inicializar grados de entrada
+    setA.forEach(node => {
+      inDegree[node] = 0;
+    });
+    
+    // Calcular grados de entrada (cuántos elementos son menores que cada nodo)
+    relation.forEach(pair => {
+      if (pair.x !== pair.y) { // Ignorar bucles
+        inDegree[pair.y]++;
+      }
+    });
+    
+    // Asignar niveles usando BFS
+    const queue: string[] = []; // Cola para nodos con grado de entrada 0
+    const levelMap: { [node: string]: number } = {};
+    
+    // Encontrar elementos minimales (grado de entrada = 0)
+    setA.forEach(node => {
+      if (inDegree[node] === 0) {
+        queue.push(node);
+        levelMap[node] = 0;
+      }
+    });
+    
+    // Procesar la cola
+    while (queue.length > 0) {
+      const currentNode = queue.shift()!;
+      const currentLevel = levelMap[currentNode];
+      
+      // Agregar a levels
+      if (!levels[currentLevel]) {
+        levels[currentLevel] = [];
+      }
+      levels[currentLevel].push(currentNode);
+      
+      // Encontrar sucesores
+      const successors = relation
+        .filter(pair => pair.x === currentNode && pair.x !== pair.y)
+        .map(pair => pair.y);
+      
+      // Procesar sucesores
+      successors.forEach(successor => {
+        inDegree[successor]--;
+        if (inDegree[successor] === 0) {
+          queue.push(successor);
+          levelMap[successor] = currentLevel + 1;
+        }
+      });
+    }
+    
+    return levels;
+  }
+
 }

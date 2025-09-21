@@ -20,3 +20,9 @@ export interface RelationData {
   relationText: string;
   properties: RelationProperties;
 }
+
+export interface HasseData{
+  setA: string[];
+  hasseRelations: Pair[]; 
+  levels: { [level: number]: string[] };
+}

@@ -1,6 +1,6 @@
 import { Component, input, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
-import { Pair } from '../../models/relations.models';
+import { Pair, HasseData } from '../../models/relations.models';
 
 @Component({
   selector: 'app-hasse-diagram',
@@ -9,8 +9,8 @@ import { Pair } from '../../models/relations.models';
   styleUrl: './hasse-diagram.css'
 })
 export class HasseDiagram implements AfterViewInit, OnChanges {
-  setA = input<string[]>([]);
-  relation = input<Pair[]>([]);
+  hasseData = input<HasseData>({ setA: [], hasseRelations: [], levels: {} });
+  orderRelation = input<boolean>(false);
   
   private svg: any;
   private width: number = 800;
@@ -25,7 +25,7 @@ export class HasseDiagram implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['relation'] && this.svg) {
+    if (changes['hasseData'] && this.svg) {
       this.renderHasseDiagram();
     }
   }
@@ -48,20 +48,13 @@ export class HasseDiagram implements AfterViewInit, OnChanges {
   }
 
   private renderHasseDiagram() {
-    const relation = this.relation();
-    const setA = this.setA();
-    
-    if (!relation.length || !setA.length) {
+    if (!this.orderRelation()) {
       return;
     }
-
-    // Filtrar la relación para el diagrama de Hasse (eliminar reflexivos y transitivos)
-    const hasseRelations = this.calculateHasseRelations(relation);
-
-    // Calcular niveles jerárquicos
-    const levels = this.calculateHierarchyLevels();
+    const setA = this.hasseData()?.setA;
+    const hasseRelations = this.hasseData().hasseRelations;
+    const levels = this.hasseData().levels;
     const nodePositions = this.calculateNodePositions(levels);
-
     // Limpiar SVG existente
     this.svg.selectAll('*').remove();
 
@@ -104,94 +97,6 @@ export class HasseDiagram implements AfterViewInit, OnChanges {
 
   }
 
-  public calculateHasseRelations(relation: Pair[]): Pair[] {
-    // 1. Eliminar relaciones reflexivas (a,a)
-    const irreflexive = relation.filter(pair => pair.x !== pair.y);
-    
-    // 2. Eliminar relaciones transitivas
-    const hasseRelations: Pair[] = [];
-    
-    for (const pair of irreflexive) {
-      let isTransitive = false;
-      
-      // Verificar si existe un camino más largo entre pair.x y pair.y
-      for (const intermediate of this.setA()) {
-        if (intermediate !== pair.x && intermediate !== pair.y) {
-          const hasFirstStep = relation.some(p => p.x === pair.x && p.y === intermediate);
-          const hasSecondStep = relation.some(p => p.x === intermediate && p.y === pair.y);
-          
-          if (hasFirstStep && hasSecondStep) {
-            isTransitive = true;
-            break;
-          }
-        }
-      }
-      
-      if (!isTransitive) {
-        hasseRelations.push(pair);
-      }
-    }
-    
-    return hasseRelations;
-  }
-
-  private calculateHierarchyLevels(): { [level: number]: string[] } {
-    const levels: { [level: number]: string[] } = {};
-    const inDegree: { [node: string]: number } = {};
-    
-    // Inicializar grados de entrada
-    this.setA().forEach(node => {
-      inDegree[node] = 0;
-    });
-    
-    // Calcular grados de entrada (cuántos elementos son menores que cada nodo)
-    this.relation().forEach(pair => {
-      if (pair.x !== pair.y) { // Ignorar bucles
-        inDegree[pair.y]++;
-      }
-    });
-    
-    // Asignar niveles usando BFS
-    const queue: string[] = []; // Cola para nodos con grado de entrada 0
-    const levelMap: { [node: string]: number } = {};
-    
-    // Encontrar elementos minimales (grado de entrada = 0)
-    this.setA().forEach(node => {
-      if (inDegree[node] === 0) {
-        queue.push(node);
-        levelMap[node] = 0;
-      }
-    });
-    
-    // Procesar la cola
-    while (queue.length > 0) {
-      const currentNode = queue.shift()!;
-      const currentLevel = levelMap[currentNode];
-      
-      // Agregar a levels
-      if (!levels[currentLevel]) {
-        levels[currentLevel] = [];
-      }
-      levels[currentLevel].push(currentNode);
-      
-      // Encontrar sucesores
-      const successors = this.relation()
-        .filter(pair => pair.x === currentNode && pair.x !== pair.y)
-        .map(pair => pair.y);
-      
-      // Procesar sucesores
-      successors.forEach(successor => {
-        inDegree[successor]--;
-        if (inDegree[successor] === 0) {
-          queue.push(successor);
-          levelMap[successor] = currentLevel + 1;
-        }
-      });
-    }
-    
-    return levels;
-  }
-
   private calculateNodePositions(levels: { [level: number]: string[] }): { [node: string]: { x: number, y: number } } {
     const positions: { [node: string]: { x: number, y: number } } = {};
     const levelCount = Object.keys(levels).length;
@@ -218,5 +123,5 @@ export class HasseDiagram implements AfterViewInit, OnChanges {
     });
     
     return positions;
-  }
+  } 
 }

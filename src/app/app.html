@@ -28,11 +28,10 @@
           </div>
         }
         
-        @if (properties()?.orderRelation) {
-            <app-hasse-diagram 
-            [setA]="setA()" 
-            [relation]="relation()" />
-        }
+        <app-hasse-diagram
+          [hasseData]="hasseData()!"
+          [orderRelation]="properties()?.orderRelation"
+        />
       </div>
     </div>
   }
