@@ -126,6 +126,7 @@ export class RelationAnalysis {
     const classes: string[][] = [];
     const processed = new Set<string>();
     
+    // Para cada elemento en el conjunto A 
     for (const element of setA) {
       if (!processed.has(element)) {
         const eqClass: string[] = [];
@@ -188,6 +189,7 @@ export class RelationAnalysis {
     return hasseRelations;
   }
 
+  //Calcular niveles jerárquicos usando BFS (para dibujar el diagrama de Hasse)
   private calculateHierarchyLevels(setA: string[], relation: Pair[]): { [level: number]: string[] } {
     const levels: { [level: number]: string[] } = {};
     const inDegree: { [node: string]: number } = {};
@@ -206,7 +208,7 @@ export class RelationAnalysis {
     
     // Asignar niveles usando BFS
     const queue: string[] = []; // Cola para nodos con grado de entrada 0
-    const levelMap: { [node: string]: number } = {};
+    const levelMap: { [node: string]: number } = {}; // Mapa de niveles
     
     // Encontrar elementos minimales (grado de entrada = 0)
     setA.forEach(node => {
